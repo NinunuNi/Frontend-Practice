@@ -1,0 +1,1666 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --font-main: 'Hanken Grotesk', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+
+
+
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    -webkit-font-smoothing: antialiased;
+}
+
+
+
+
+
+/* Header: แบบโปร่งแสงหรือขาวสะอาด */
+.main-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background: rgba(255, 255, 255, 0.95);
+    z-index: 999999;
+    font-size: 16px;
+    letter-spacing: 1px;
+
+}
+
+.main-header:has(.dropdown:hover) .header-left .dropdown-menu li a {
+    color: #000000 !important; 
+}
+
+/* --- เพิ่ม Dropdown สำหรับฝั่งซ้าย (TH - THB) --- */
+.header-left .dropdown {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.header-left .dropdown > a {
+    text-decoration: none;
+    color: #000 !important;
+    font-size: 14px;
+    font-weight: 500;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s ease;
+}
+
+/* ล็อคสีตัวแม่ (TH - THB) ให้เป็นสีดำเสมอเมื่อกางเมนู */
+.header-left .dropdown:hover > a {
+    color: #000000 !important; /* บังคับดำสนิท ไม่ให้เปลี่ยนเป็นขาว */
+    opacity: 1 !important;
+}
+
+/* จัดตำแหน่ง Dropdown ฝั่งซ้าย */
+.header-left .dropdown-menu {
+    transform: translateX(-10%);
+    left: 0;
+    align-items: flex-start;
+    
+    background-color: #ffffff !important; 
+    padding: 5px 10px; /* เพิ่มพื้นที่ว่างข้างในให้ดูพรีเมียม */
+    min-width: 100px;   /* กำหนดความกว้างขั้นต่ำ */
+    border: 1px solid #f0f0f0;
+    font-size: 45px;
+    
+    /* ซ่อนไว้ก่อน Hover */
+    max-height: 0;
+    opacity: 0;
+    overflow: visible;
+    position: absolute;
+    top: 100%;
+    list-style: none;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+
+.header-left .dropdown-menu li a {
+    color: #000000 !important; /* บังคับเป็นสีดำ */
+    font-size: 11px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.header-center {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+/* สร้าง Overlay สีดำไว้หลัง Navbar */
+.header-center::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(0, 0, 0); /* สีดำจางๆ ปรับความเข้มที่ 0.5 */
+    z-index: -1; /* ให้อยู่หลังเมนู */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+/* เมื่อ Hover ที่ลิสต์เมนู ให้ Overlay แสดงตัว */
+.header-center:has(.dropdown:hover)::before {
+    opacity: 1;
+}
+
+
+.dropdown:hover > a, 
+.dropdown:hover .dropdown-menu li a {
+    color: #fff !important; /* เปลี่ยนเป็นสีขาวเพื่อให้เด่น */
+}
+
+.dropdown:hover .dropdown-menu li a {
+    color: #ccc !important; /* ตัวลูกให้เป็นขาวจางๆ */
+}
+
+/* จัดการลิสต์เมนูหลัก */
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 40px;
+    align-items: center; /* ให้เมนูทุตัวขนานกันในแนวระนาบ */
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links > li {
+    position: relative; /* ให้ Dropdown อ้างอิงตำแหน่งจากตัวนี้ */
+    display: flex;
+    justify-content: center;
+}
+
+/* เอฟเฟกต์เมนูหลัก (EDITORIAL, WOMEN, etc.) */
+.nav-links > li > a {
+    text-decoration: none;
+    color: #000;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    white-space: nowrap;
+}
+
+/* เมื่อ Hover ให้ขยายใหญ่ขึ้นแบบ Smooth */
+.nav-links > li:hover > a {
+    transform: scale(1.2);
+}
+
+/* --- ส่วน Dropdown Menu (ให้ลอยทับ ไม่ดันเพื่อน) --- */
+.dropdown-menu {
+    position: absolute;
+    top: 100%; /* โผล่ใต้เมนูหลักพอดี */
+    left: 50%;
+    transform: translateX(-80%);
+    list-style: none;
+    padding: 20px 0 0 0; /* เว้นระยะจากตัวแม่นิดหน่อย */
+    margin: 0;
+    
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none; /* ป้องกันการเผลอไปโดนตอนซ่อน */
+    overflow: visible;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    gap: 15px;
+    transition: max-height 0.5s ease, opacity 0.3s ease;
+}
+
+.dropdown:hover .dropdown-menu {
+    max-height: 500px;
+    opacity: 1;
+    pointer-events: auto; /* ให้คลิกลิงก์ข้างในได้ */
+}
+
+.dropdown-menu li a {
+    text-decoration: none;
+    font-size: 12px;
+    color: #888; /* สีเทาจางๆ ในตอนแรก */
+    text-transform: uppercase;
+    display: inline-block; /* สำคัญ: เพื่อให้ขยาย scale ได้ */
+    
+    /* ใช้จังหวะการขยายแบบเดียวกับเมนูหลัก */
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s ease;
+    
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+/* เมื่อเอา Cursor ไปชี้ที่ตัวเลือกใน Dropdown */
+.dropdown-menu li a:hover {
+    color: #fff !important; /* เปลี่ยนเป็นสีขาวตาม Overlay ที่เราทำไว้ */
+    transform: scale(1.25); /* ขยายให้ใหญ่ขึ้นกว่าเมนูหลักนิดหน่อยเพื่อให้ดูเด่น */
+}
+
+/* 3. (เพิ่มเติม) ทำให้ตัวเลือกอื่นใน Dropdown ที่ไม่ได้ชี้ดูจางลง */
+.dropdown-menu:hover li a:not(:hover) {
+    opacity: 0.4;
+    transform: scale(0.9); /* หดตัวที่ไม่เลือกลงเล็กน้อย */
+}
+
+/* --- เอฟเฟกต์หดตัวข้างๆ (Optional แต่แนะนำให้ใส่เพื่อให้ดูเหมือนคลิป) --- */
+.nav-links:hover > li:not(:hover) {
+    opacity: 0.3;
+    transform: scale(0.9);
+}
+
+
+
+/* กำหนดให้ฝั่งซ้ายและขวามีพื้นที่เท่ากัน (Flex-basis) */
+.header-left, .nav-right {
+    flex: 1; /* แบ่งพื้นที่ที่เหลือให้เท่ากันทั้งสองฝั่ง */
+    display: flex;
+    align-items: center;
+}
+
+/* ฝั่งขวาให้ชิดขวาสุด */
+.nav-right {
+    justify-content: flex-end;
+}
+
+.signin-link {
+    text-decoration: none;
+    color: #000; /* สีเริ่มต้น */
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding-right: 20px;
+    display: inline-block;
+    
+    /* ใช้จังหวะเวลาเดียวกับเมนูอื่นเพื่อให้งานดูเนียนทั้งหน้า */
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                opacity 0.3s ease, 
+                color 0.3s ease;
+    
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+}
+
+/* เมื่อเอา Cursor ไปชี้ที่ SIGN IN */
+.signin-link:hover {
+    opacity: 0.5;      /* ทำให้สีจางลงตามคลิป */
+    color: #000;       /* ล็อคสีดำไว้ (หรือเป็น #fff ถ้าพื้นหลังดำทำงาน) */
+}
+
+
+/* ไอคอนกระเป๋า */
+.cart-icon {
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.cart-icon:hover {
+    transform: scale(1.1);
+}
+
+
+/* Hero Section: ตัวหนังสือใหญ่ๆ ทับรูป */
+/*.hero-section {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* เต็มหน้าจอ 
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+*/
+.hero-section {
+    background-color: #000000;
+}
+
+.hero-logo {
+    position: fixed;
+    top: 50px; /* ปรับค่านี้ให้เท่ากับความสูงของ Navbar เพื่อให้มันดูชิดติดกันพอดี */
+    left: 0;
+    width: 100%; /* ยืดเต็มหน้าจอ */
+    padding: 0px 50px; /* เว้นระยะขอบซ้ายขวานิดหน่อยตาม Figma */
+    z-index: 1000; /* ให้ทับอยู่บนวิดีโอ */
+    display: flex;
+    justify-content: center;
+    pointer-events: none; /* เพื่อคลิกปุ่มข้างหลังโลโก้ได้ */
+    /* ห้ามใส่ background: white; ตรงนี้เด็ดขาด */
+    background: transparent !important;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); /* จังหวะย่อนุ่มๆ แบบไฮเอนด์ */
+    transform-origin: center top; /* ให้ย่อโดยยึดจากกึ่งกลางด้านบน */
+    opacity: 0.7;
+}
+
+.hero-logo svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    
+    /* 2. สั่งให้สีเปลี่ยนตามพื้นหลัง (ทับขาวเป็นดำ ทับดำเป็นขาว) */
+    mix-blend-mode: difference !important; 
+
+    transition: width 0.6s ease;
+    
+}
+
+.marquee-container, .collection-grid, .placeholder-img {
+    background-color: #ffffff !important; 
+    position: relative;
+    z-index: 1;
+}
+
+.hero-logo.scrolled {
+    top: 50px; /* เลื่อนขึ้นไปให้ตรงกับกึ่งกลางของ Navbar */
+    transform: scale(0.1); /* ย่อขนาดลงเหลือ 30% (ปรับตัวเลขนี้เพื่อความเล็ก-ใหญ่) */
+}
+
+
+.hero-logo.scrolled img {
+    filter: brightness(0) invert(0);
+}
+
+
+.hero-content {
+    text-align: center;
+    z-index: 1; /* ทับวิดีโอขึ้นมา */
+}
+
+.bg-video {
+    width: 100%;
+    height: 100dvh; /* Dynamic Viewport Height - ตัวแก้ปัญหาเฉพาะทางของ Safari มือถือ */
+    object-fit: cover;
+}
+
+/*.bg-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%); /* จัดวิดีโอให้อยู่กึ่งกลางเสมอ 
+    object-fit: cover;
+    z-index: -1; /* อยู่ล่างสุด 
+}
+*/
+
+.hero-svg {
+    width: 80vw; /* ปรับขนาดความกว้างตาม Figma */
+    max-width: 1200px;
+    height: auto;
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.3)); /* ช่วยให้ SVG เด่นขึ้นถ้าพื้นหลังวิดีโอสว่าง */
+}
+
+.hero-subtext {
+    color: white;
+    margin-top: 20px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+
+/* Collection Grid: แบ่งครึ่งเป๊ะๆ */
+collection-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    padding: 2px;
+    background-color: #ffffff; /* เติมบรรทัดนี้ลงไปเพื่อให้สี Logo ตัดกัน */
+}
+
+.placeholder-img {
+    background: #f2f2f2;
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    letter-spacing: 2px;
+
+}
+
+.placeholder-img:hover {
+    background: #e5e5e5;
+}
+
+
+
+
+
+
+
+
+
+
+.new-arrival-section {
+    padding: 100px 0;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-container {
+    max-width: 600px; /* ปรับขนาดความกว้างตามความเหมาะสม */
+    width: 90%;
+    text-align: center;
+}
+
+.product-image-wrapper {
+    position: relative;
+    margin-bottom: 35px;
+}
+
+.product-image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.new-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-20%, -100%);
+    color: #ffffff;
+    font-size: 60px;
+    font-weight: 800;
+    padding: 10px 30px;
+    letter-spacing: 5px;
+    z-index: 5;
+    will-change: transform; /* ช่วยให้การเคลื่อนไหวลื่นไหลขึ้น */
+}
+
+.product-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-transform: none; /* ปรับตามดีไซน์ว่าอยากให้เป็นตัวเล็กหรือใหญ่ */
+}
+
+.product-desc {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* เพิ่มลูกเล่นให้ Image "New" */
+.product-image-wrapper img {
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.product-image-wrapper:hover img {
+    transform: scale(1.03);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.video-parallax-section {
+    padding: 100px 0;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+}
+
+.video-container {
+    max-width: 1000px; /* วิดีโออาจจะต้องการความกว้างมากกว่ารูปภาพ */
+    width: 90%;
+    text-align: center;
+}
+
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    height: 60vh; /* กำหนดความสูงของวิดีโอ */
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
+.content-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* บังคับให้วิดีโอเต็มกรอบโดยไม่เสียสัดส่วน */
+}
+
+.scroll-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 5vw; /* ใช้หน่วย vw เพื่อให้ขนาดปรับตามความกว้างจอ */
+    font-weight: 800;
+    padding: 10px 40px;
+    letter-spacing: 10px;
+    z-index: 5;
+    white-space: nowrap;
+    will-change: transform;
+}
+
+
+
+
+
+
+
+
+
+
+
+.collection-gallery {
+    max-width: 1200px; /* ลดจาก 1600px ลงมาเพื่อให้ดู Compact และแพงขึ้น */
+    margin: 0 auto;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* ระยะห่างระหว่างแถว */
+}
+
+.collection-item {
+    position: relative;
+    width: 100%;
+    margin-bottom: 50px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+
+
+
+/* ตั้งค่าพื้นฐานให้ทุก media-holder */
+.media-holder {
+    position: relative; /* สำคัญมาก: เพื่อให้ label อ้างอิงกึ่งกลางจากกรอบนี้ */
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex; /* ช่วยในการจัดวางโครงสร้างภายใน */
+    align-items: center;
+    justify-content: center;
+}
+
+/* จัดการรูปภายในให้พอดีกรอบ ไม่ยืด */
+.media-holder img, 
+.media-holder video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* สำคัญ: รูปจะถูกตัดให้พอดีกรอบโดยไม่เสียสัดส่วน */
+    display: block;
+}
+
+/* ระบุเฉพาะเจาะจง: ถ้า media-holder อยู่ในคลาส large ให้เป็น 16/7 */
+.collection-item.large .media-holder {
+    aspect-ratio: 16 / 7; 
+}
+
+/* ระบุเฉพาะเจาะจง: ถ้า media-holder อยู่ในคลาส small ให้เป็น 1/1 */
+.collection-item.small .media-holder {
+    aspect-ratio: 1 / 1; 
+}
+
+/* --- การจัดการ Media ข้างใน --- */
+
+.static-img, .hover-video, .hover-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* รวม transition ไว้ที่เดียวเพื่อความสะอาด */
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-video, .hover-img {
+    opacity: 0;
+    z-index: 2;
+}
+
+.static-img {
+    opacity: 1;
+    z-index: 1;
+}
+
+/* --- Hover Effects --- */
+
+.collection-item:hover .static-img {
+    opacity: 0;
+}
+
+.collection-item:hover .hover-video,
+.collection-item:hover .hover-img {
+    opacity: 1;
+}
+
+/* เอฟเฟกต์ Zoom: เพิ่ม .hover-video และ .hover-img ให้ครบ */
+.collection-item:hover .static-img,
+.collection-item:hover .hover-video,
+.collection-item:hover .hover-img {
+    transform: scale(1.05);
+}
+
+/* --- Layout Grid --- */
+
+.collection-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+}
+
+/* --- Label --- */
+
+.collection-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* ดึงตัวอักษรกลับมาครึ่งหนึ่งของตัวมันเองเพื่อให้กลางเป๊ะ */
+    
+    color: #fff;
+    font-size: clamp(1.5rem, 4vw, 2.8rem); /* ปรับขนาดให้ใหญ่ขึ้นเล็กน้อยตามความเหมาะสม */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 10;
+    pointer-events: none;
+    text-align: center; /* เผื่อกรณีตัวหนังสือมีหลายบรรทัด */
+    white-space: nowrap; /* ป้องกันตัวหนังสือตัดบรรทัดจนเสียรูปทรง */
+    text-shadow: 0 4px 15px rgba(0,0,0,0.5); /* เพิ่มความเข้มเพื่อให้ลอยออกมาจากรูป */
+}
+
+/* ปรับขนาดพิเศษสำหรับ Collection 02 และ 03 (รูปเล็กด้านล่าง) */
+.collection-row .collection-item.small .collection-label {
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem); /* ขนาดจะเล็กลงมาอีกเพื่อให้ดูแพง */
+    letter-spacing: 0.15em;
+}
+
+
+
+
+
+.service-section {
+    background-color: #fff;
+    width: 100%;
+}
+
+/* --- Marquee Style --- */
+.marquee-container {
+    background-color: #000 !important;
+    overflow: hidden;
+    padding: 10px 0; /* ความหนาของแถบดำ */
+    width: 100%;
+    display: block;
+    position: relative;
+    z-index: 999;
+}
+
+.marquee-content {
+    display: flex;
+    align-items: center; /* จัดลูกศรให้อยู่กลางแนวตั้ง */
+    width: max-content;
+    white-space: nowrap;
+    animation: marquee-scroll 20s linear infinite;
+    background-color: transparent !important;
+}
+
+.marquee-content span {
+    color: #ffffff !important;
+    font-size: 50px; /* ขนาดต Text */
+    font-weight: 800;
+    letter-spacing: 0.1em; /* ถ่างตัวอักษรให้ดู High-end ตามรูป */
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
+    padding: 0 40px; /* ระยะห่างระหว่างต text กับลูกศร */
+}
+
+.pixel-arrow.flip-horizontal {
+    transform: scaleX(-1);
+}
+
+.pixel-arrow {
+    height: 80px; /* ขนาดลูกศร */
+    width: auto;
+    margin: 0 20px;
+    display: inline-block;
+    filter: brightness(0) invert(1); /*ทำให้เป็นสีขาว ถ้ารูปลูกษรเป็นสีดำ (ไม่จำเป็น)*/
+    vertical-align: middle; /* จัดให้ลูกศรอยู่กึ่งกลางบรรทัดเดียวกับตัวอักษร */
+    flex-shrink: 0;
+}
+
+@keyframes marquee-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } /* วิ่งไปครึ่งหนึ่งของความยาวที่ซ้ำไว้ */
+}
+
+/* --- Service Grid Style --- */
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* แบ่ง 3 คอลัมน์เท่ากันเป๊ะ */
+    gap: 120px; /* ระยะห่างระหว่างคอลัมน์ */
+    padding: 100px 8% 120px 8%; /* เว้นขอบข้าง 8% */
+    max-width: 1600px;
+    margin: 50px;
+}
+
+.service-item h3 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 25px;
+}
+
+.service-item p {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.2;
+    text-align: left;
+}
+
+.service-item u {
+    text-underline-offset: 4px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.faq-section {
+    background-color: #000;
+    color: #fff;
+    padding: 100px 5%;
+    font-family: var(--font-main);
+    text-align: center;
+}
+
+.faq-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.faq-title {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+.faq-subtitle {
+    font-size: 14px;
+    color: #ccc;
+    max-width: 600px;
+    margin: 0 auto 50px auto;
+    line-height: 1.6;
+}
+
+/* --- Tabs Style --- */
+.faq-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+}
+
+.faq-group {
+    display: none;
+    opacity: 0;
+    transform: translateY(15px); /* ให้เนื้อหาขยับขึ้นตอนปรากฏ */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.faq-group.active {
+    display: block !important; /* แสดงเฉพาะกลุ่มที่มีคลาส active */
+    animation: smoothFade 0.5s ease forwards;
+}
+
+@keyframes smoothFade {
+    from { 
+        opacity: 0; 
+        transform: translateY(15px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.tab-btn {
+    padding: 12px 30px;
+    background: #1a1a1a;
+    color: #888;
+    border: 1px solid #333;
+    padding: 10px 25px;
+    border-radius: 50px; /* ทรงมน (Capsule) */
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    background: #fff; /* ปุ่มที่เลือก */
+    color: #000;
+    border-color: #fff;
+}
+
+/* --- Accordion Style --- */
+.faq-list {
+    text-align: left;
+    border-top: 1px solid #333;
+    margin-top: 50px;
+}
+
+.faq-item {
+    border-bottom: 1px solid #333;
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.faq-icon {
+    transition: transform 0.3s ease;
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(180deg);
+}
+
+.faq-icon::after {
+    content: '⌵'; /* ใช้ตัวอักษรหรือ SVG ลูกศรลง */
+    font-size: 20px;
+    transition: 0.3s;
+    display: inline-block;
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(180deg); /* หมุนลูกศรขึ้นเมื่อเปิด */
+}
+
+.faq-answer {
+    text-align: left;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; /* ใช้ timing function ให้ดูแพง */
+    opacity: 0;
+    background-color: transparent;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 0px; /* ปรับตามเนื้อหา */
+    opacity: 1;
+    padding-bottom: 50px;
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(180deg);
+}
+
+.faq-answer p {
+    font-size: 13px;
+    color: #999;
+    line-height: 1.6;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* กลุ่ม Radio */
+.radio-group {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.radio-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    user-select: none;
+}
+
+/* ซ่อน Radio ดั้งเดิม */
+.radio-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* สร้างวงกลมขอบนอก (สีขาวขอบเทา) */
+.radio-mark {
+    height: 18px;
+    width: 18px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    margin-right: 10px;
+    display: inline-block;
+    position: relative;
+    transition: 0.2s;
+}
+
+/* เมื่อเลือก (Checked) - เปลี่ยนขอบเป็นสีดำ */
+.radio-container input:checked ~ .radio-mark {
+    border-color: #000;
+}
+
+/* สร้างจุดสีดำข้างใน (ตอนแรกซ่อนไว้) */
+.radio-mark::after {
+    content: "";
+    position: absolute;
+    display: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px; /* ขนาดจุดสีดำด้านใน */
+    height: 10px;
+    border-radius: 50%;
+    background: #000;
+}
+
+/* เมื่อเลือก - ให้จุดสีดำปรากฏ */
+.radio-container input:checked ~ .radio-mark::after {
+    display: block;
+}
+
+.inquiry-section {
+    background-color: #fff;
+    padding: 100px 5%; /* ระยะห่างบน-ล่าง และซ้าย-ขวาจากขอบจอ */
+}
+
+.inquiry-container {
+    max-width: 1300px; /* ขยายความกว้างสูงสุดให้ดูพรีเมียม */
+    margin: 0 auto;
+    display: flex;
+    justify-content: bwtween;
+    align-items: flex-start; /* ให้เนื้อหาเริ่มจากด้านบน */
+    gap: 80px; /* ระยะห่างระหว่างฝั่งซ้ายกับฝั่งขวา */
+}
+
+/* ให้สัดส่วน ฝั่งซ้าย 40% */
+.inquiry-content {
+    flex: 0 0 40%; 
+}
+
+.inquiry-title {
+    font-size: 40px; /* ขนาดตัวอักษรใหญ่หนาตามรูป */
+    font-weight: 1000;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+}
+
+.inquiry-desc {
+    font-size: 20px;
+    line-height: 1.6;
+    color: #000;
+    max-width: 380px; /* บีบความกว้างข้อความอธิบายให้ดูเป็นระเบียบ */
+}
+
+/* ฝั่งขวา: 60% */
+.inquiry-form-wrapper {
+    flex: 1; /* กินพื้นที่ที่เหลือทั้งหมด */
+}
+
+@media (max-width: 992px) {
+    .inquiry-container {
+        flex-direction: column;
+        gap: 50px;
+    }
+    .inquiry-title {
+        font-size: 48px;
+    }
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px 30px;
+}
+
+.form-item {
+    position: relative;
+    border-bottom: 1px solid #dbdbdb;
+    padding-top: 15px; /* เว้นที่ให้ Label ลอย */
+}
+
+.form-item input {
+    width: 100%;
+    border: none !important;
+    background: transparent;
+    padding: 10px 0;
+    font-size: 15px;
+    color: #000;
+    outline: none;
+}
+
+/* เมื่อคลิก หรือ เมื่อมีข้อความ (placeholder ไม่โชว์) */
+.form-item input:focus ~ label,
+.form-item input:not(:placeholder-shown) ~ label {
+    top: 0;
+    font-size: 11px;
+    color: #aaa;
+}
+
+/* ตั้งค่า Label เริ่มต้น */
+.form-item label {
+    position: absolute;
+    left: 0;
+    top: 25px; /* ทับตำแหน่ง Input */
+    color: #999;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.inquiry-form {
+    flex: 1; /* กินพื้นที่ฝั่งขวาที่เหลือจากข้อความฝั่งซ้าย */
+}
+
+/* เส้นบรรทัดล่างของ Input */
+.inquiry-form input[type="text"],
+.inquiry-form input[type="email"],
+.inquiry-form input[type="tel"] {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #dbdbdb;
+    padding: 12px 0;
+    width: 100%;
+    outline: none;
+    color: #000;
+    transition: border-bottom-color 0.3s;
+}
+
+/* เมื่อคลิกที่ช่อง ให้เส้นเข้มขึ้น */
+.inquiry-form input:focus {
+    border-bottom-color: #000;
+}
+
+/* Custom Select สไตล์ตามรูปขวา */
+.custom-select {
+    position: relative;
+}
+
+.custom-select .floating-label {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    transition: 0.3s ease;
+    pointer-events: none;
+    color: #999;
+}
+
+/* ปรับตัวหนังสือที่ถูกเลือกให้เด่นขึ้น */
+.selected-text {
+    display: block;
+    font-size: 15px;
+    color: #888; /* สีจางตอนยังไม่เลือก */
+    transition: color 0.3s ease;
+    padding-top: 5px;
+}
+
+/* ปรับให้ Option ดูเป็นปุ่มที่คลิกได้จริง */
+.option {
+    padding: 15px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+}
+
+
+/* คลุมตัวเลือกทั้งหมด */
+.custom-select {
+    position: relative;
+    width: 100%;
+    border-bottom: 1px solid #dbdbdb; /* เส้นใต้เลียนแบบ input */
+}
+
+/* สถานะเมื่อมีการเลือกค่า (มี class .has-value) หรือมีการเปิด Dropdown */
+.custom-select.has-value .floating-label,
+.custom-select.open .floating-label {
+    top: -15px; /* เลื่อนขึ้นข้างบน */
+    font-size: 12px;
+    color: #888;
+}
+
+/* พื้นที่สำหรับการคลิก */
+.select-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    cursor: pointer;
+    min-height: 45px;
+    background: transparent;
+}
+
+/* สร้างลูกศรด้วย CSS (ไม่ต้องพึ่งรูป) */
+.arrow-icon::after {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid #000;
+    border-bottom: 1.5px solid #000;
+    transform: rotate(45deg);
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+/* เมื่อ Dropdown เปิด (Active) ให้หมุนลูกศร */
+.custom-select.active .arrow-icon::after {
+    transform: rotate(-135deg);
+}
+
+/* กล่องรายการตัวเลือก */
+.select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #ffffff !important;
+    border: 1px solid #eee;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    z-index: 999999; /* บังคับให้อยู่บนสุด */
+    display: none; /* ซ่อนไว้ก่อน */
+}
+
+/* แสดงเมื่อมีคลาส active */
+.custom-select.active .select-options {
+    display: block;
+}
+
+.option {
+    padding: 12px 20px;
+    cursor: pointer;
+    background: #fff;
+    transition: 0.2s;
+}
+
+.option:hover {
+    background: #f8f8f8;
+}
+
+/* ป้องกัน Label บังการคลิก */
+.floating-label {
+    pointer-events: none;
+}
+
+
+
+
+
+
+.send-btn {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 15px 60px;
+    margin-top: 30px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 40px;
+    font-size: 14px;
+    color: #666;
+}
+
+.checkbox-container input {
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+    accent-color: #000; /* วิธีที่ง่ายที่สุดสำหรับ Checkbox */
+}
+
+
+
+
+
+
+
+
+.main-footer {
+    background-color: #fcfcfc; /* สีพื้นหลังเทาอ่อนๆ ตามรูป */
+    padding: 60px 5% 40px;
+    font-family: Arial, sans-serif;
+    color: #000;
+}
+
+/* HOMEPAGE Link */
+.footer-top {
+    margin-bottom: 50px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+
+.homepage-link {
+    text-decoration: none;
+    color: #000;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.homepage-link:hover {
+    opacity: 0.6; /* จางลงเล็กน้อยเวลาเอาเมาส์ชี้แบบ Minimal */
+}
+
+/* Grid Layout */
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) 1.5fr; /* 4 คอลัมน์แรกเท่ากัน ส่วน Newsletter กว้างกว่านิดหน่อย */
+    gap: 40px;
+    margin-bottom: 80px;
+}
+
+.footer-col h4 {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 12px;
+}
+
+.footer-col ul li a {
+    text-decoration: none;
+    color: #666; /* สีเทาตามเรฟ */
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.footer-col ul li a:hover {
+    color: #000;
+}
+
+/* Newsletter Section */
+.newsletter-col input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #000;
+    background: transparent;
+    padding: 10px 0;
+    font-size: 13px;
+    outline: none;
+    margin-bottom: 20px;
+}
+
+.subscribe-btn {
+    width: 100%;
+    background-color: #e0e0e0; /* สีเทาตามรูป */
+    border: none;
+    padding: 15px 0;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.subscribe-btn:hover {
+    background-color: #d0d0d0;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --- สำหรับโทรศัพท์ (Mobile) --- */
+@media (max-width: 768px) {
+    .collection-label {
+        font-size: 1.8rem; /* บังคับขนาดให้ชัดเจนบนมือถือ */
+        letter-spacing: 1px;
+    }
+}
+
+
+
+
+/* --- Desktop: ซ่อนส่วนมือถือ --- */
+.hamburger-icon, .mobile-overlay {
+    display: none;
+}
+
+/* --- Navbar : ปรับแต่งการแสดงผล --- */
+@media (max-width: 1024px) {
+    /* ซ่อนเมนูตรงกลางและปุ่ม Sign in เดิม */
+    .header-center, .signin-link {
+        display: none;
+    }
+
+    /* แสดงปุ่ม Hamburger */
+    .hamburger-icon {
+        width: 30px;
+        height: 30px;
+        position: relative;
+        cursor: pointer;
+        z-index: 100001; /* ให้อยู่เหนือ Mobile Menu */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .hamburger-icon span {
+        display: block;
+        width: 25px;
+        height: 1.5px;
+        background: #000;
+        position: absolute;
+        transition: 0.4s ease, top 0.4 case;
+    }
+
+    .line-1 { top: 10px; }
+    .line-2 { top: 18px; }
+
+    /* เมื่อเมนูถูกเปิด (กลายเป็น X) */
+    .hamburger-icon.open .line-1 {
+        top: 14px; /* ขยับมาตรงกลาง */
+        transform: rotate(45deg);
+    }
+
+    .hamburger-icon.open .line-2 {
+        top: 14px; /* ขยับมาตรงกลาง */
+        transform: rotate(-45deg);
+    }
+
+    /* สไตล์หน้ากากเมนูเต็มจอ */
+    .mobile-overlay {
+        display: block;
+        position: fixed;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        z-index: 100000;
+        transition: transform 0.5s ease-in-out;
+        padding: 100px 40px;
+    }
+    
+    .mobile-overlay.active {
+        transform: translateY(100%);
+    }
+
+    .mobile-menu-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .mobile-menu-content a, .mobile-dropdown-trigger {
+        font-size: 20px;
+        text-decoration: none;
+        color: #000;
+        font-weight: 500;
+    }
+
+    /* ตัวแม่ (EDITORIAL) ในสภาวะปกติ */
+    .mobile-dropdown-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        font-size: 20px; /* ขนาดปกติ */
+        font-weight: 500;
+        color: #000;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* ทำให้ขยายอย่างลื่นไหล */
+        padding: 10px 0;
+    }
+
+    /* เมื่อตัวแม่ EDITORIAL ถูกกด (Active) */
+    .mobile-dropdown-trigger.active {
+        font-size: 28px; /* ขยายใหญ่ขึ้นตามภาพ */
+        font-weight: 700; /* ทำให้ตัวหนาขึ้น */
+        margin-bottom: 20px; /* เพิ่มระยะห่างระหว่างตัวแม่กับตัวลูกกลุ่มแรก */
+    }
+
+    /* สร้างลูกศรด้วย CSS */
+    .mobile-arrow {
+        width: 8px;
+        height: 8px;
+        right: calc(50% - 65px);
+        border-right: 1.5px solid #000;
+        border-bottom: 1.5px solid #000;
+        transform: rotate(45deg); /* ชี้ลง */
+        transition: transform 0.3s ease;
+        margin-bottom: 4px; /* ปรับระดับให้ตรงสายตา */
+    }
+
+    /* เมื่อกางออก ให้ลูกศรหมุนขึ้น แต่ EDITORIAL อยู่ที่เดิม */
+    .mobile-dropdown-trigger.active .mobile-arrow {
+        transform: rotate(-135deg); /* ชี้ขึ้น */
+        margin-bottom: -2px;
+    }
+
+    /* จัดการระยะห่างของเมนูย่อย (ตัวลูก) */
+    .mobile-submenu {
+        display: none; 
+        flex-direction: column;
+        align-items: center;
+        gap: 15px; /* ระยะห่างระหว่างตัวลูกแต่ละตัว */
+        margin-bottom: 30px; /* เพิ่มระยะห่างก่อนจะไปถึงเมนูถัดไป (NEWS) */
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    /* เมื่อ Submenu แสดงผล */
+    .mobile-submenu.show {
+        display: flex;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* ระยะห่างระหว่างเมนูหลักตัวอื่นๆ */
+    .mobile-menu-content > a {
+        font-size: 20px;
+        font-weight: 500;
+        text-decoration: none;
+        color: #000;
+        margin: 15px 0; /* เพิ่มระยะห่างระหว่างเมนูหลัก */
+        transition: all 0.3s ease;
+    }
+
+
+
+
+
+
+
+    /* ทำให้ nav-right แสดงผลบนมือถือ */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            order: 3; /* จัดลำดับให้อยู่ขวาสุด */
+        }
+
+        /* ตรวจสอบว่าปุ่ม SIGN IN ไม่ถูกซ่อน */
+        .signin-link {
+            display: block !important; 
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        /* ปรับตำแหน่ง Hamburger ให้อยู่ตรงกลาง (ตามดีไซน์) */
+        .hamburger-icon {
+            order: 2;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* จัดระเบียบ Header Left */
+        .header-left {
+            order: 1;
+        }
+
+
+
+
+
+
+/* Collection item : สไตล์สำหรับมือถือ (Mobile) */
+@media (max-width: 768px) {
+    .collection-label {
+        font-size: 1.5rem; /* ขนาดคงที่สำหรับจอมือถือ */
+    }
+    
+    .collection-row .collection-item.small .collection-label {
+        font-size: 1.2rem;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* --- Service Grid : สำหรับสลับเป็นแนวตั้งในมือถือ --- */
+    @media (max-width: 1024px) {
+        .service-grid {
+            grid-template-columns: 1fr; /* สลับเป็น 1 คอลัมน์ (Mobile) */
+            gap: 80px; /* เพิ่มระยะห่างระหว่างหัวข้อให้ดูโปร่งขึ้น */
+            padding: 60px 10%; /* ปรับขอบข้างให้เข้ากับจอมือถือ */
+        }
+
+        .service-item h3 {
+            font-size: 22px; /* ขยายหัวข้อให้ใหญ่และเด่นตามดีไซน์มือถือที่คุณต้องการ */
+            font-weight: 800; /* เพิ่มความหนาพิเศษให้ดูพรีเมียม */
+            margin-bottom: 20px;
+        }
+
+        .service-item p {
+            font-size: 16px; /* ขยายตัวเนื้อหาให้อ่านง่ายขึ้นบนหน้าจอขนาดเล็ก */
+            line-height: 1.8;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    /* --- Faq Question : สไตล์สำหรับโทรศัพท์ (Mobile) --- */
+    @media (max-width: 768px) {
+        .faq-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .faq-tabs {
+            flex-direction: column; /* เรียงปุ่มเป็นแนวตั้ง */
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tab-btn {
+        /* แก้ไขจุดสำคัญ: ให้ Border กว้างแค่เท่าตัวอักษร */
+            width: fit-content; 
+            min-width: 160px;   /* กำหนดความกว้างขั้นต่ำเพื่อให้ปุ่มดูสมดุล (ปรับได้ตามความสวยงาม) */
+            
+            padding: 10px 25px; /* ปรับ Padding ให้พอดีเหมือนเวอร์ชันคอม */
+            margin: 0 auto;     /* บังคับให้อยู่กลาง */
+            display: block;     /* เปลี่ยนเป็น block เพื่อให้ margin auto ทำงาน */
+            
+            /* สไตล์ความโค้งและสีตามรูป */
+            border-radius: 50px; 
+            font-size: 13px;
+            letter-spacing: 0.05em;
+        }
+
+        /* จัดการ Accordion (Question/Answer) ให้ดูโปร่งขึ้น */
+        .faq-question {
+            padding: 25px 0;
+            border-bottom: 1px solid #333; /* เส้นคั่นบางๆ */
+            font-size: 16px;
+            text-align: left;
+        }
+    }
+
+
+
+
+}
+
+
+
+
+
+
